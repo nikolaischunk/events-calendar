@@ -1,66 +1,70 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import React, { useState } from 'react';
+import styles from './page.module.css';
+import { FilterBar } from '../components/organisms/FilterBar/FilterBar';
+import { CalendarView } from '../components/organisms/CalendarView/CalendarView';
+import { ListView } from '../components/organisms/ListView/ListView';
+import { mockEvents } from '../lib/mockData';
+import { ClubName } from '../lib/types';
 
 export default function Home() {
+  const [view, setView] = useState<'list' | 'calendar'>('calendar');
+  const [selectedClubs, setSelectedClubs] = useState<string[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  
+  const availableClubs: ClubName[] = ["Mäx", "Exil", "Supermarket", "Plaza", "X-Tra", "Bellevue Club"];
+  
+  // Extract unique genres from mock data
+  const availableGenres = Array.from(
+    new Set(mockEvents.flatMap(event => event.genres))
+  ).sort();
+
+  const toggleClub = (club: string) => {
+    setSelectedClubs(prev => 
+      prev.includes(club) 
+        ? prev.filter(c => c !== club)
+        : [...prev, club]
+    );
+  };
+
+  const toggleGenre = (genre: string) => {
+    setSelectedGenres(prev => 
+      prev.includes(genre)
+        ? prev.filter(g => g !== genre)
+        : [...prev, genre]
+    );
+  };
+
+  // Filter events based on selected clubs AND selected genres
+  const filteredEvents = mockEvents.filter(event => {
+    const passClub = selectedClubs.length === 0 || selectedClubs.includes(event.club);
+    const passGenre = selectedGenres.length === 0 || event.genres.some(g => selectedGenres.includes(g));
+    return passClub && passGenre;
+  });
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <main className={styles.main}>
+      <div className={styles.container}>
+        <FilterBar 
+          view={view}
+          setView={setView}
+          selectedClubs={selectedClubs}
+          toggleClub={toggleClub}
+          availableClubs={availableClubs}
+          selectedGenres={selectedGenres}
+          toggleGenre={toggleGenre}
+          availableGenres={availableGenres}
         />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        
+        <div className={styles.contentArea}>
+          {view === 'calendar' ? (
+            <CalendarView events={filteredEvents} />
+          ) : (
+            <ListView events={filteredEvents} />
+          )}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
