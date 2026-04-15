@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { mockEvents } from '../../../lib/mockData';
+import { getEvents } from '../../../lib/kv';
 import { getClubColorVariable } from '../../../lib/utils';
 import { Badge } from '../../../components/atoms/Badge/Badge';
 import { Card } from '../../../components/atoms/Card/Card';
@@ -16,7 +16,8 @@ interface EventPageProps {
 
 export default async function EventDetail({ params }: EventPageProps) {
   const resolvedParams = await params;
-  const event = mockEvents.find(e => e.id === resolvedParams.id);
+  const events = await getEvents();
+  const event = events.find(e => e.id === resolvedParams.id);
 
   if (!event) {
     return (

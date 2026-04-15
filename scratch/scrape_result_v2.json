@@ -1,0 +1,853 @@
+{
+    "success": true,
+    "count": 77,
+    "events": [
+        {
+            "id": "b846c5771eefc07e3649de0fe64a180b",
+            "club": "Exil",
+            "title": "Dante YN",
+            "date": "2026-04-16T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/dante-yn",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "7ed7af532af0b55db0a0a7204692ca87",
+            "club": "Exil",
+            "title": "Takt32",
+            "date": "2026-04-17T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/takt32-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "3b874195031d7077bd971d42e02c27f0",
+            "club": "Exil",
+            "title": "SESH pres. MCR-T (4H Set)",
+            "date": "2026-04-17T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/sesh-pres-mcr-t",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "2050159897d4cbbf2e49a0b9df6d45d2",
+            "club": "Exil",
+            "title": "RO$C",
+            "date": "2026-04-18T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/rosc",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "ba1b40f97e5041581c7e29bac8f7b66d",
+            "club": "Exil",
+            "title": "F.A.G.",
+            "date": "2026-04-18T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/f-a-g",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "931e5a88f4a97169369193a7cc276364",
+            "club": "Exil",
+            "title": "Ataypapi (abgesagt)",
+            "date": "2026-04-19T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ataypapi",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "947dd059a984d7185bfb076a1b51eca0",
+            "club": "Exil",
+            "title": "MONTAGS 1116 NIK BÄRTSCH’S RONIN",
+            "date": "2026-04-20T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ronin-20-04-26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "1cc55c461273dd26f1171ec65bdaf1ee",
+            "club": "Exil",
+            "title": "Antony Szmierek",
+            "date": "2026-04-21T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/antony-szmierek",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "ed7ad849790910b0d1ac3c8e838a71db",
+            "club": "Exil",
+            "title": "SRF Bounce Cypher – Public Viewing",
+            "date": "2026-04-23T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/srf-bounce-cypher-public-viewing-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "562436b9105d24868eeca83dd8e6f11b",
+            "club": "Exil",
+            "title": "Brat Party",
+            "date": "2026-04-24T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/brat-party-april26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "2843f36dc35a420de47b32a16cf39914",
+            "club": "Exil",
+            "title": "Yellow Days",
+            "date": "2026-04-25T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/yellow-days",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "cd2d4906bc09d5c942b992961fed9d9b",
+            "club": "Exil",
+            "title": "Sonic Sisters - Bail(e) me out",
+            "date": "2026-04-25T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/sonic-sisters-baile",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "ef26830149fa1fdb3b6b28e262a5ca49",
+            "club": "Exil",
+            "title": "MONTAGS 1117 NIK BÄRTSCH’S RONIN",
+            "date": "2026-04-27T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ronin-27-04-26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "9faa610ed3f66c6098579330ff679351",
+            "club": "Exil",
+            "title": "MzumO",
+            "date": "2026-04-30T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/mzumo",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "75e0cf40ba184c939798537ac731fd8e",
+            "club": "Exil",
+            "title": "Zeitgeist",
+            "date": "2026-04-30T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/zeitgeist-april26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "7e9540068a405a5b81139221a6be5a6a",
+            "club": "Exil",
+            "title": "Rocknacht",
+            "date": "2026-05-02T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/rocknacht-may26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "d8ebf2120f6909abaf50ede15737f946",
+            "club": "Exil",
+            "title": "Flo Naegeli",
+            "date": "2026-05-03T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/flo-naegeli",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "3c581bc63cd9bcefb4214512c885702f",
+            "club": "Exil",
+            "title": "MONTAGS 1118 NIK BÄRTSCH'S MOBILE",
+            "date": "2026-05-04T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/nik-baertschs-mobile-04-05-26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "ef0880da21fa109d867f1295e7095a62",
+            "club": "Exil",
+            "title": "Xavi",
+            "date": "2026-05-05T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/xavi",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "d5509b439bedd857869f3f145c927c7d",
+            "club": "Exil",
+            "title": "Davyboi All Night Long",
+            "date": "2026-05-08T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/davyboi-all-night-long",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "07a9b0ea95db06ad54142271e15964da",
+            "club": "Exil",
+            "title": "Just Dance",
+            "date": "2026-05-09T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/just-dance-may26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "480d22f53da5fc26aecfe8932f51d2d2",
+            "club": "Exil",
+            "title": "MONTAGS 1119 NIK BÄRTSCH’S RONIN",
+            "date": "2026-05-11T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ronin-11-05-26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "17e9b966f21f62b2b0209983948b2b88",
+            "club": "Exil",
+            "title": "Choke mit Vladimir Dubyshkin & Butschi",
+            "date": "2026-05-13T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/choke-mit-vladimir-dubyshkin-butschi",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "d0427a677dd35b633f903429a56f1dc0",
+            "club": "Exil",
+            "title": "The Heated Rivalry Night",
+            "date": "2026-05-15T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/heated-rivalry-may",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "8c49fa2c4827b37ac0d2f6c52aa67244",
+            "club": "Exil",
+            "title": "benno!",
+            "date": "2026-05-16T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/benno",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "f5ba4fac2b2db7ba3b8b77725e6acbc1",
+            "club": "Exil",
+            "title": "Trash Pop",
+            "date": "2026-05-16T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/trashpop-may26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "549fffb25332457925f1fe39875bf504",
+            "club": "Exil",
+            "title": "Lalalar",
+            "date": "2026-05-21T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/lalalar-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "8cd20c86f91b9f6a0b8fc093f1b0ad5f",
+            "club": "Exil",
+            "title": "Pop Girly Night",
+            "date": "2026-05-22T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/pop-girly-night",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "3136e117c86c6d2fcd734b258389c338",
+            "club": "Exil",
+            "title": "Main Concept",
+            "date": "2026-05-23T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/main-concept",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "64048344a6af981ce0c630b69f1ce84d",
+            "club": "Exil",
+            "title": "Waterfalls - Finest RnB & Hip-Hop",
+            "date": "2026-05-23T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/waterfallsmay26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "1c99525940c4b422cc35a3888c3cf574",
+            "club": "Exil",
+            "title": "Podcast Clash",
+            "date": "2026-05-28T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/podcast-clash-2026-mai",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "f01816b77a700a469167ae5088a7ba8b",
+            "club": "Exil",
+            "title": "Tanzleila",
+            "date": "2026-05-29T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/tanzleila-may26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "8504a6e241264c6b256c58a5237f1ae6",
+            "club": "Exil",
+            "title": "Zeitgeist",
+            "date": "2026-05-30T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/zeitgeist-may26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "c4dd58faae7c5b51481a7be665b74431",
+            "club": "Exil",
+            "title": "Blind Delon",
+            "date": "2026-06-04T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/blind-delon",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "b65c68908e641e3caca6669bd9646d8f",
+            "club": "Exil",
+            "title": "Yonaka",
+            "date": "2026-06-14T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/yonaka",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "b43ea0a491acff2fa64f55f4dbdb502f",
+            "club": "Exil",
+            "title": "Lakeview",
+            "date": "2026-06-16T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/lakeview",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "414ab9b0f28cf5692058865279005a5e",
+            "club": "Exil",
+            "title": "Bad Bunny Party",
+            "date": "2026-06-26T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/bad-bunny-party-jun26",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "f3c1bcb9cc88a45dadc102cf7d14d97c",
+            "club": "Exil",
+            "title": "JA SAFE ALL NIGHT LONG",
+            "date": "2026-07-03T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ja-safe-all-night-long",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "212ec5fa860fd0558004423ff9139d9a",
+            "club": "Exil",
+            "title": "Cortez All Night Long",
+            "date": "2026-07-17T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/cortez-all-night-long",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "23608e3331faf5b3842c9dc4f1ac58ce",
+            "club": "Exil",
+            "title": "Missio",
+            "date": "2026-08-26T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/missio",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "fd29273cccb96ed35d76824664f9cb2c",
+            "club": "Exil",
+            "title": "anaïs",
+            "date": "2026-09-08T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/anais",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "16727915df61d413a2a93b744027b429",
+            "club": "Exil",
+            "title": "Projekt ET",
+            "date": "2026-09-17T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/projekt-et",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "dc2c5b56dd9695d33da671abee3285d5",
+            "club": "Exil",
+            "title": "Drug Church",
+            "date": "2026-09-20T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/drug-church",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "fc9d48805d771f45230ada6d28836642",
+            "club": "Exil",
+            "title": "Lute",
+            "date": "2026-09-22T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/lute",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "bde87dbc508e16989e59564236f8e9fb",
+            "club": "Exil",
+            "title": "CCOSMO",
+            "date": "2026-09-26T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ccosmo",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "18ec75b03f2d02b6d811ad9fcc0c890f",
+            "club": "Exil",
+            "title": "Say Yes Dog",
+            "date": "2026-09-27T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/say-yes-dog-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "32bddef83a08a9fdca43c6877acbfe42",
+            "club": "Exil",
+            "title": "Witchz",
+            "date": "2026-09-29T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/witchz",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "bb50b9d85bca14d2f6e0d0a98519d5e0",
+            "club": "Exil",
+            "title": "Niemand muss ein Promi sein",
+            "date": "2026-10-10T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/niemand-muss-ein-promi-sein",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "a08acfc3a6ac7ec399be66034ac4693e",
+            "club": "Exil",
+            "title": "Mariybu",
+            "date": "2026-10-11T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/mariybu-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "93dda397e7a9d600fed4d9f2825a0469",
+            "club": "Exil",
+            "title": "Elin",
+            "date": "2026-10-16T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/elin",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "82db1491bf4a969ac1c0c8edc533346d",
+            "club": "Exil",
+            "title": "Dub Pistols",
+            "date": "2026-10-21T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/dub-pistols",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "adad6d400320275af64f0ae2f8c211e5",
+            "club": "Exil",
+            "title": "Matterz",
+            "date": "2026-10-22T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/matterz",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "e712b80f8c281809482378e4014abae8",
+            "club": "Exil",
+            "title": "Berwyn",
+            "date": "2026-10-23T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/berwyn",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "2f8a731f93460883916dec7cd3d9fec2",
+            "club": "Exil",
+            "title": "Luvre47",
+            "date": "2026-10-24T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/luvre472-0",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "d9106911598d46cc44a16233cf5880ce",
+            "club": "Exil",
+            "title": "Eli Preiss",
+            "date": "2026-10-25T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/eli-preiss-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "b70dd2c7076a798b9bc8706def96cc17",
+            "club": "Exil",
+            "title": "Jonny5",
+            "date": "2026-10-31T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/jonny5",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "119c5dfcc2995ea3408bd147c3cc6936",
+            "club": "Exil",
+            "title": "$ono$ Cliq",
+            "date": "2026-11-04T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/sonos-cliq",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "b1db90070b97145d56ee548077228747",
+            "club": "Exil",
+            "title": "FHG PVP",
+            "date": "2026-11-05T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/fhg-pvp",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "67c2999323adbbdab006a718f4d1c12e",
+            "club": "Exil",
+            "title": "Soffie",
+            "date": "2026-11-06T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/soffie",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "22d5ae68c84ddd779e613fa74f990186",
+            "club": "Exil",
+            "title": "The Meltdown",
+            "date": "2026-11-07T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/the-meltdown",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "07fd89b65bea06966fbdd62df8009389",
+            "club": "Exil",
+            "title": "Sports",
+            "date": "2026-11-08T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/sports",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "5e16eaf1877cc6dea2edc29a2bae9a9e",
+            "club": "Exil",
+            "title": "Westside Cowboy",
+            "date": "2026-11-10T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/westsidecowboy",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "1f629998acdd771547c8033a07491cad",
+            "club": "Exil",
+            "title": "Rowli",
+            "date": "2026-11-13T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/rowli",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "117b2e6487b9a618ba1b2d0bc8790b06",
+            "club": "Exil",
+            "title": "MC Bomber",
+            "date": "2026-11-14T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/mc-bomber-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "569e23fdb3d08daa51e2b19084478c8b",
+            "club": "Exil",
+            "title": "Infinity Song im Plaza",
+            "date": "2026-11-15T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/infinity-song-im-plaza",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "f15e897427c3a4e0625132ec16be8347",
+            "club": "Exil",
+            "title": "Son Mieux",
+            "date": "2026-11-15T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/son-mieux-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "b4a1cc641e126abd956894b38ffb0f67",
+            "club": "Exil",
+            "title": "JAS",
+            "date": "2026-11-27T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/jas",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "5221ed2e7f506122361cd031ea07c397",
+            "club": "Exil",
+            "title": "Frytz",
+            "date": "2026-12-02T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/frytz",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "81aebf8306890dc9d77c5f0cd00d0f4d",
+            "club": "Exil",
+            "title": "Pablo",
+            "date": "2026-12-03T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/pablo",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "5e87b47f08ebb5bc59b193b2634a2af9",
+            "club": "Exil",
+            "title": "Glueboys",
+            "date": "2026-12-08T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/glueboys",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "931b52f0c187d336192b87dcc0df5502",
+            "club": "Exil",
+            "title": "Mika Noé",
+            "date": "2026-12-10T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/mika-noe",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "f0b70719a8fec00ac407e107ed7bbf86",
+            "club": "Exil",
+            "title": "Jamin",
+            "date": "2026-12-12T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/jamin",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "b22ff04bc94fc78cf1260fb5eb55c44e",
+            "club": "Exil",
+            "title": "Jaill",
+            "date": "2027-02-06T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/jaill-2026",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "abeefdc3e6fef8bc58c58b79916ac05c",
+            "club": "Exil",
+            "title": "Karate Andi",
+            "date": "2027-02-20T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/karate-andi-2027",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "39925c2e79b981ce439caf2693d5a948",
+            "club": "Exil",
+            "title": "PA Sports",
+            "date": "2027-03-10T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/pa-sports",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "0129019f82407cf069495551fa9a0cc2",
+            "club": "Exil",
+            "title": "Ian Hooper",
+            "date": "2027-04-14T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/ian-hooper2-0",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        },
+        {
+            "id": "27c1b31d617b0b19dd674f56196976fc",
+            "club": "Exil",
+            "title": "Kati K",
+            "date": "2027-04-16T22:00:00.000Z",
+            "eventUrl": "https://exil.club/events/kati-k",
+            "genres": [
+                "Electronic",
+                "Club"
+            ]
+        }
+    ]
+}

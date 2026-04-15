@@ -7,5 +7,7 @@ export interface CalendarEvent {
   description?: string;
   date: string; // ISO 8601 string
   imageUrl?: string;
+  ticketUrl?: string;
+  eventUrl?: string;
   genres: string[];
 }
