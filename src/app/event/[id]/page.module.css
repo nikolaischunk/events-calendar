@@ -147,9 +147,29 @@
   transform: translateY(0);
 }
 
+.primaryBtn:active {
+  transform: translateY(0);
+}
+
 .notFound {
   padding: 4rem;
   text-align: center;
   font-size: 1.25rem;
   color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .dateTime {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }

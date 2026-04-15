@@ -68,3 +68,26 @@
   object-fit: cover;
 }
 
+@media (max-width: 640px) {
+  .eventCard {
+    flex-direction: column;
+  }
+
+  .timeSection {
+    min-width: unset;
+    border-right: none;
+    border-bottom: 2px solid var(--border-subtle);
+    padding-right: 0;
+    padding-bottom: 0.5rem;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    min-width: 100%;
+    aspect-ratio: 16 / 9;
+    order: -1; /* Move image to top */
+  }
+}
+
