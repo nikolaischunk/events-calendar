@@ -10,4 +10,7 @@ export interface CalendarEvent {
   ticketUrl?: string;
   eventUrl?: string;
   genres: string[];
+  artists?: string[];
+  doorsTime?: string;
+  startTime?: string;
 }

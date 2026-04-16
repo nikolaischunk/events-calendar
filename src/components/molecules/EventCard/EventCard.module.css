@@ -49,17 +49,11 @@
   flex: 1; /* Pushes genres down if description is short */
 }
 
-.genres {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
-}
-
 .imageWrapper {
   position: relative;
-  width: 140px;
-  min-width: 140px;
+  width: 180px;
+  height: 112px;
+  min-width: 180px;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-sm);

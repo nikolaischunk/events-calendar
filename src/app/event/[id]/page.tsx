@@ -45,6 +45,8 @@ export default async function EventDetail({ params }: EventPageProps) {
     minute: '2-digit' 
   });
 
+  const primaryLink = event.ticketUrl || event.eventUrl;
+
   return (
     <main className={styles.main}>
       <div className={styles.container}>
@@ -79,11 +81,6 @@ export default async function EventDetail({ params }: EventPageProps) {
                   <span className={styles.date}>{dateString}</span>
                   <span className={styles.time}>{timeString}</span>
                 </div>
-                <div className={styles.genres}>
-                  {event.genres.map(genre => (
-                    <Badge key={genre} label={genre} variant="subtle" />
-                  ))}
-                </div>
               </div>
             </div>
 
@@ -93,14 +90,45 @@ export default async function EventDetail({ params }: EventPageProps) {
                 <p className={styles.descriptionText}>{event.description}</p>
               </div>
             )}
+
+            {event.artists && event.artists.length > 0 && (
+              <div className={styles.descriptionSection}>
+                <h3 className={styles.sectionTitle}>Artists</h3>
+                <p className={styles.descriptionText}>{event.artists.join(', ')}</p>
+              </div>
+            )}
+
+            {(event.doorsTime || event.startTime) && (
+              <div className={styles.descriptionSection}>
+                <h3 className={styles.sectionTitle}>Times</h3>
+                <p className={styles.descriptionText}>
+                  {event.doorsTime ? `Doors: ${event.doorsTime}` : null}
+                  {event.doorsTime && event.startTime ? ' · ' : null}
+                  {event.startTime ? `Start: ${event.startTime}` : null}
+                </p>
+              </div>
+            )}
             
             <div className={styles.actionSection}>
-              <button 
-                className={styles.primaryBtn}
-                style={{ backgroundColor: clubColor }}
-              >
-                Get Tickets
-              </button>
+              {primaryLink ? (
+                <a
+                  href={primaryLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.primaryBtn}
+                  style={{ backgroundColor: clubColor }}
+                >
+                  Get Tickets
+                </a>
+              ) : (
+                <button
+                  className={styles.primaryBtn}
+                  style={{ backgroundColor: clubColor }}
+                  disabled
+                >
+                  Tickets unavailable
+                </button>
+              )}
             </div>
           </div>
         </Card>

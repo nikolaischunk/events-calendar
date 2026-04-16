@@ -7,5 +7,5 @@ export const revalidate = 60; // revalidate every 60 seconds
 export default async function Home() {
   const events = await getEvents();
   
-  return <HomeClient events={events} />;
+  return <HomeClient events={events} view="calendar" />;
 }

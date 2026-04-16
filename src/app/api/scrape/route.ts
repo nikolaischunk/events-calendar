@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     try {
       await saveEvents(events);
       console.log(`Successfully saved ${events.length} events to KV.`);
-    } catch (kvError) {
+    } catch (kvError: unknown) {
       console.error('KV Save Error - Is UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN set?', kvError);
       // We still return the events even if KV fails to save for visibility
     }
