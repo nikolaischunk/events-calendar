@@ -13,6 +13,8 @@ interface FilterBarProps {
   selectedGenres: string[];
   toggleGenre: (genre: string) => void;
   availableGenres: string[];
+  onUpdateData: () => void;
+  isUpdating: boolean;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -23,7 +25,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   availableClubs,
   selectedGenres,
   toggleGenre,
-  availableGenres
+  availableGenres,
+  onUpdateData,
+  isUpdating
 }) => {
   return (
     <div className={styles.filterBar}>
@@ -43,6 +47,21 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             List
           </button>
         </div>
+        
+        <button 
+          className={`${styles.updateBtn} ${isUpdating ? styles.loading : ''}`}
+          onClick={onUpdateData}
+          disabled={isUpdating}
+        >
+          {isUpdating ? (
+            <>
+              <span className={styles.spinner}></span>
+              Updating...
+            </>
+          ) : (
+            'Update Data'
+          )}
+        </button>
       </div>
       
       <div className={styles.filtersWrapper}>

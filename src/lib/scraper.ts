@@ -190,11 +190,22 @@ export async function scrapeSupermarket(): Promise<CalendarEvent[]> {
  * Main scraper runner that aggregates all clubs
  */
 export async function runAllScrapers(): Promise<CalendarEvent[]> {
-  const results = await Promise.all([
-    scrapeExil(),
-    scrapeMaex(),
-    scrapeSupermarket()
-  ]);
+  const scrapers = [
+    { name: 'Exil', fn: scrapeExil },
+    { name: 'Mäx', fn: scrapeMaex },
+    { name: 'Supermarket', fn: scrapeSupermarket }
+  ];
+
+  const results = await Promise.all(
+    scrapers.map(async (scraper) => {
+      try {
+        return await scraper.fn();
+      } catch (error) {
+        console.error(`Error in scraper ${scraper.name}:`, error);
+        return [];
+      }
+    })
+  );
 
   // Flatten the array of arrays
   return results.flat();

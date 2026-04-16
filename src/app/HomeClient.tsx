@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import styles from './page.module.css';
 import { FilterBar } from '../components/organisms/FilterBar/FilterBar';
 import { CalendarView } from '../components/organisms/CalendarView/CalendarView';
+import { useRouter } from 'next/navigation';
 import { ListView } from '../components/organisms/ListView/ListView';
 import { CalendarEvent, ClubName } from '../lib/types';
 
@@ -15,6 +16,8 @@ export function HomeClient({ events }: HomeClientProps) {
   const [view, setView] = useState<'list' | 'calendar'>('calendar');
   const [selectedClubs, setSelectedClubs] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const router = useRouter();
   
   const availableClubs: ClubName[] = ["Mäx", "Exil", "Supermarket", "Plaza", "X-Tra", "Bellevue Club"];
   
@@ -44,6 +47,22 @@ export function HomeClient({ events }: HomeClientProps) {
     const passGenre = selectedGenres.length === 0 || (event.genres && event.genres.some(g => selectedGenres.includes(g)));
     return passClub && passGenre;
   });
+  
+  const handleUpdateData = async () => {
+    setIsUpdating(true);
+    try {
+      const response = await fetch('/api/scrape');
+      if (response.ok) {
+        router.refresh();
+      } else {
+        console.error('Failed to update data:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error updating data:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   return (
     <main className={styles.main}>
@@ -57,6 +76,8 @@ export function HomeClient({ events }: HomeClientProps) {
           selectedGenres={selectedGenres}
           toggleGenre={toggleGenre}
           availableGenres={availableGenres}
+          onUpdateData={handleUpdateData}
+          isUpdating={isUpdating}
         />
         
         <div className={styles.contentArea}>
