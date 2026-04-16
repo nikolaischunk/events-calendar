@@ -57,6 +57,7 @@ export default async function EventDetail({ params }: EventPageProps) {
                 src={event.imageUrl} 
                 alt={event.title} 
                 fill
+                sizes="100vw"
                 priority
                 className={styles.heroImage}
               />

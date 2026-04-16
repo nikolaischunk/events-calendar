@@ -24,9 +24,17 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   return (
     <Link href={`/event/${event.id}`}>
       <Card hoverable className={styles.eventCard}>
-        <div className={styles.timeSection}>
-          <span className={styles.time}>{timeString}</span>
-        </div>
+        {event.imageUrl && (
+          <div className={styles.imageWrapper}>
+            <Image 
+              src={event.imageUrl} 
+              alt={event.title} 
+              fill
+              sizes="(max-width: 640px) 100vw, 140px"
+              className={styles.image}
+            />
+          </div>
+        )}
         <div className={styles.contentSection}>
           <div className={styles.header}>
             <h3 className={styles.title}>{event.title}</h3>
@@ -43,17 +51,10 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             ))}
           </div>
         </div>
-        
-        {event.imageUrl && (
-          <div className={styles.imageWrapper}>
-            <Image 
-              src={event.imageUrl} 
-              alt={event.title} 
-              fill
-              className={styles.image}
-            />
-          </div>
-        )}
+
+        <div className={styles.timeSection}>
+          <span className={styles.time}>{timeString}</span>
+        </div>
       </Card>
     </Link>
   );

@@ -10,8 +10,9 @@
   flex-direction: column;
   justify-content: flex-start;
   min-width: 60px;
-  border-right: 2px solid var(--border-subtle);
-  padding-right: 1rem;
+  border-left: 2px solid var(--border-subtle);
+  padding-left: 1rem;
+  text-align: right;
 }
 
 .time {
@@ -75,19 +76,19 @@
 
   .timeSection {
     min-width: unset;
-    border-right: none;
-    border-bottom: 2px solid var(--border-subtle);
-    padding-right: 0;
-    padding-bottom: 0.5rem;
+    border-left: none;
+    border-top: 2px solid var(--border-subtle);
+    padding-left: 0;
+    padding-top: 0.5rem;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-end;
   }
 
   .imageWrapper {
     width: 100%;
     min-width: 100%;
     aspect-ratio: 16 / 9;
-    order: -1; /* Move image to top */
   }
 }
 
