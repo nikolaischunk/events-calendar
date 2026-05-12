@@ -1,4 +1,4 @@
-import { scrapeExil, scrapeMaex, scrapeSupermarket } from './src/lib/scraper';
+import { scrapeExil, scrapeMaex, scrapeSupermarket } from '../src/lib/scraper.js';
 
 async function test() {
   console.log('--- Testing Exil ---');

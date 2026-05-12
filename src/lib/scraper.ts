@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import type { Element } from "domhandler";
 import { CalendarEvent, ClubName } from "./types";
 import crypto from "crypto";
 import {
@@ -114,7 +115,7 @@ function extractBackgroundImageUrl(style: string): string | undefined {
 
 function extractImageUrlFromContainer(
   $: cheerio.CheerioAPI,
-  container: cheerio.Cheerio<cheerio.Element>,
+  container: cheerio.Cheerio<Element>,
   baseUrl: string,
 ): string | undefined {
   // Prefer actual <img> nodes (lazy-load attributes first), then CSS background images.
@@ -745,7 +746,7 @@ export async function scrapeExil(): Promise<CalendarEvent[]> {
     .get();
 
   const results = await Promise.all(eventPromises);
-  const filteredEvents = results.filter((e): e is CalendarEvent => e !== null);
+  const filteredEvents = results.filter((e): e is NonNullable<typeof e> => e !== null);
 
   console.log(`Exil: Scraped ${filteredEvents.length} events`);
   return filteredEvents;
@@ -801,8 +802,8 @@ export async function scrapeMaex(): Promise<CalendarEvent[]> {
 
     const imageAnchor = anchors.has("img").first();
     const imageUrl = imageAnchor.length
-      ? extractImageUrlFromContainer($, imageAnchor, url)
-      : extractImageUrlFromContainer($, container, url);
+      ? extractImageUrlFromContainer($, imageAnchor as cheerio.Cheerio<Element>, url)
+      : extractImageUrlFromContainer($, container as cheerio.Cheerio<Element>, url);
 
     events.push({
       id: generateId(),
@@ -865,7 +866,7 @@ export async function scrapeSupermarket(): Promise<CalendarEvent[]> {
 
     const imageAnchor = anchors.has("img").first();
     const imageUrl = imageAnchor.length
-      ? extractImageUrlFromContainer($, imageAnchor, url)
+      ? extractImageUrlFromContainer($, imageAnchor as cheerio.Cheerio<Element>, url)
       : undefined;
 
     events.push({
