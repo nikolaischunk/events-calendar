@@ -13,6 +13,13 @@ const generateId = () => crypto.randomBytes(16).toString("hex");
 
 const WEEKENDLY_BASE_URL = "https://weekendly.ch";
 const WEEKENDLY_ZURICH_CLUBS_URL = `${WEEKENDLY_BASE_URL}/clubs/zurich`;
+const GERMAN_DAY_PATTERN =
+  "(?:mo|di|mi|do|fr|sa|so|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)";
+const GERMAN_RELATIVE_DAY_PATTERN = "(?:heute|morgen)";
+const WEEKENDLY_DATE_LINE_REGEX = new RegExp(
+  `${GERMAN_RELATIVE_DAY_PATTERN}|mo\\.|di\\.|mi\\.|do\\.|fr\\.|sa\\.|so\\.`,
+  "i",
+);
 
 function buildFetchHeaders(url: string): Record<string, string> {
   const headers: Record<string, string> = {
@@ -244,8 +251,10 @@ function parseDate(dateStr: string): string {
       DEC: "12",
     };
 
-    const textMonthRegex =
-      /(?:mo|di|mi|do|fr|sa|so|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)?[.,\s]*(\d{1,2})\.?\s*([A-ZÄÖÜ]+)/i;
+    const textMonthRegex = new RegExp(
+      `${GERMAN_DAY_PATTERN}?[.,\\s]*(\\d{1,2})\\.?\\s*([A-ZÄÖÜ]+)`,
+      "i",
+    );
     const textMonthMatch = normalized.match(textMonthRegex);
     if (textMonthMatch) {
       const day = textMonthMatch[1].padStart(2, "0");
@@ -830,7 +839,9 @@ function pickWeekendlyTitle(
     .map((line) => safeTrim(line))
     .filter(Boolean)
     .filter((line) => !/gewinne tickets?/i.test(line))
-    .filter((line) => !/(heute|morgen|mo\.|di\.|mi\.|do\.|fr\.|sa\.|so\.)/i.test(line))
+    .filter(
+      (line) => !WEEKENDLY_DATE_LINE_REGEX.test(line),
+    )
     .filter((line) => !/zürich|zurich/i.test(line))
     .filter((line) => !/\b\d{1,2}:\d{2}\b/.test(line))
     .filter((line) => line.length >= 3 && line.length <= 120);
@@ -843,10 +854,16 @@ function pickWeekendlyDateText(containerText: string): string | undefined {
   if (!normalized) return undefined;
   const dateLike =
     normalized.match(
-      /(heute|morgen)\s*(?:ab\s*)?\d{1,2}:\d{2}\s*uhr?/i,
+      new RegExp(
+        `${GERMAN_RELATIVE_DAY_PATTERN}\\s*(?:ab\\s*)?\\d{1,2}:\\d{2}\\s*uhr?`,
+        "i",
+      ),
     )?.[0] ||
     normalized.match(
-      /(mo|di|mi|do|fr|sa|so)\.?,?\s*\d{1,2}\.?\s*[a-zäöü]+(?:\s*ab\s*\d{1,2}:\d{2}\s*uhr?)?/i,
+      new RegExp(
+        `${GERMAN_DAY_PATTERN}\\.?,?\\s*\\d{1,2}\\.?\\s*[a-zäöü]+(?:\\s*ab\\s*\\d{1,2}:\\d{2}\\s*uhr?)?`,
+        "i",
+      ),
     )?.[0] ||
     normalized.match(
       /\d{1,2}\.?\s*[a-zäöü]+(?:\s*\d{4})?(?:\s*ab\s*\d{1,2}:\d{2}\s*uhr?)?/i,
@@ -925,6 +942,14 @@ async function scrapeWeekendlyClub(club: ClubName): Promise<CalendarEvent[]> {
   return events;
 }
 
+function isWeekendlyDetailEnabled(): boolean {
+  const explicit = process.env.SCRAPE_WEEKENDLY_DETAIL_ENABLED;
+  if (explicit === "true") return true;
+  if (explicit === "false") return false;
+  // Backward compatibility with older flag.
+  return process.env.SCRAPE_WEEKENDLY_SKIP_DETAIL === "false";
+}
+
 // Scraper for Exil
 export async function scrapeExil(): Promise<CalendarEvent[]> {
   return scrapeWeekendlyClub("Exil");
@@ -981,9 +1006,8 @@ export async function runAllScrapers(): Promise<CalendarEvent[]> {
 
   const discovered = results.flat();
 
-  const skipWeekendlyDetail =
-    process.env.SCRAPE_WEEKENDLY_SKIP_DETAIL !== "false";
-  if (skipWeekendlyDetail) {
+  const weekendlyDetailEnabled = isWeekendlyDetailEnabled();
+  if (!weekendlyDetailEnabled) {
     return discovered;
   }
 
