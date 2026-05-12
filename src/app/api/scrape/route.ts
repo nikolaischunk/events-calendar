@@ -7,8 +7,6 @@ export async function GET(request: Request) {
   const secret = searchParams.get('secret');
 
   // Verify the secret to prevent unauthorized scraping
-  // In production, you would check this against process.env.SCRAPE_SECRET
-  // For local development, we allow a bypass or a specific string like "local_dev"
   if (process.env.NODE_ENV === 'production' && secret !== process.env.SCRAPE_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
