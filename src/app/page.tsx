@@ -1,8 +1,7 @@
 import { getEvents } from '../lib/kv';
 import { HomeClient } from './HomeClient';
 
-// Ensure this page is rendered dynamically when events update, or revalidated periodically.
-export const revalidate = 60; // revalidate every 60 seconds
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const events = await getEvents();
