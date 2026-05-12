@@ -186,6 +186,7 @@ function parseDate(dateStr: string): string {
     const normalized = safeTrim(dateStr);
     const now = new Date();
     const timeMatch = normalized.match(/(\d{1,2}):(\d{2})/);
+    // Weekendly overview cards sometimes omit a time; default to late-evening club start.
     const hours = timeMatch ? Number(timeMatch[1]) : 22;
     const minutes = timeMatch ? Number(timeMatch[2]) : 0;
 
@@ -767,10 +768,11 @@ function normalizeForMatch(value: string): string {
 }
 
 function detectClubFromText(value: string): ClubName | null {
+  if (/\bmäx\b|\bmaex\b/i.test(value)) return "Mäx";
+
   const normalized = normalizeForMatch(value);
   if (!normalized) return null;
   if (normalized.includes("exil")) return "Exil";
-  if (normalized.includes("maex") || normalized.includes("max")) return "Mäx";
   if (normalized.includes("supermarket")) return "Supermarket";
   if (normalized.includes("plaza")) return "Plaza";
   if (normalized.includes("xtra")) return "X-Tra";
@@ -924,7 +926,7 @@ async function scrapeWeekendlyClub(club: ClubName): Promise<CalendarEvent[]> {
     const containerText = safeTrim(container.text());
     const dateText = pickWeekendlyDateText(containerText) || "";
     const genres = pickWeekendlyGenres($, container as cheerio.Cheerio<Element>, club);
-    const location = /zürich|zurich/i.test(containerText) ? "Zürich" : undefined;
+    const location = pickWeekendlyLocation(containerText, club);
 
     events.push({
       id: generateId(),
@@ -940,6 +942,20 @@ async function scrapeWeekendlyClub(club: ClubName): Promise<CalendarEvent[]> {
 
   console.log(`${club}: Scraped ${events.length} events from Weekendly`);
   return events;
+}
+
+function pickWeekendlyLocation(
+  containerText: string,
+  club: ClubName,
+): string | undefined {
+  const normalized = containerText.toLowerCase();
+  if (normalized.includes("zürich") || normalized.includes("zurich")) {
+    return "Zürich";
+  }
+  if (detectClubFromText(containerText) === club) {
+    return "Zürich";
+  }
+  return undefined;
 }
 
 function isWeekendlyDetailEnabled(): boolean {
