@@ -1,8 +1,5 @@
 import { runAllScrapers } from '../src/lib/scraper';
 import { saveEvents } from '../src/lib/kv';
-import dotenv from 'dotenv';
-
-dotenv.config({ path: '.env.local' });
 
 async function test() {
   console.log('Starting scraper...');

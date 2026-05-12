@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "debug:scraper": "node --env-file=.env.local --experimental-strip-types scratch/debug_scraper.ts"
   },
   "dependencies": {
     "@upstash/redis": "^1.35.0",
