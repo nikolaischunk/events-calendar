@@ -13,14 +13,7 @@ interface EventCardProps {
 
 export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const clubColor = getClubColorVariable(event.club);
-  const eventDate = new Date(event.date);
-  
-  // Format time, e.g., "23:00"
-  const timeString = eventDate.toLocaleTimeString('de-CH', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
-  const displayTime = event.startTime || timeString;
+  const displayTime = event.startTime;
 
   return (
     <Link href={`/event/${event.id}`}>
@@ -41,11 +34,16 @@ export const EventCard: React.FC<EventCardProps> = ({ event }) => {
             <h3 className={styles.title}>{event.title}</h3>
             <Badge label={event.club} color={clubColor} variant="solid" />
           </div>
+          {event.description && (
+            <p className={styles.description}>{event.description}</p>
+          )}
         </div>
 
-        <div className={styles.timeSection}>
-          <span className={styles.time}>{displayTime}</span>
-        </div>
+        {displayTime && (
+          <div className={styles.timeSection}>
+            <span className={styles.time}>{displayTime}</span>
+          </div>
+        )}
       </Card>
     </Link>
   );

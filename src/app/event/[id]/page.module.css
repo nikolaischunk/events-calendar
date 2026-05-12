@@ -15,16 +15,6 @@
   gap: 1.5rem;
 }
 
-.backBtn {
-  font-weight: 600;
-  color: var(--text-secondary);
-  transition: color var(--transition-fast);
-  align-self: flex-start;
-}
-
-.backBtn:hover {
-  color: var(--text-primary);
-}
 
 .detailCard {
   overflow: hidden;

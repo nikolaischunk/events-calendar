@@ -1,10 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { getEvents } from '../../../lib/kv';
 import { getClubColorVariable } from '../../../lib/utils';
 import { Badge } from '../../../components/atoms/Badge/Badge';
 import { Card } from '../../../components/atoms/Card/Card';
+import { BackButton } from '../../../components/atoms/BackButton/BackButton';
 import styles from './page.module.css';
 
 // In Next.js 13+ App Router, Params for dynamic routes are promised or synchronous depending on version.
@@ -23,7 +23,7 @@ export default async function EventDetail({ params }: EventPageProps) {
     return (
       <main className={styles.main}>
         <div className={styles.container}>
-          <Link href="/" className={styles.backBtn}>&larr; Back to Calendar</Link>
+          <BackButton className={styles.backBtn} />
           <div className={styles.notFound}>Event not found</div>
         </div>
       </main>
@@ -50,7 +50,7 @@ export default async function EventDetail({ params }: EventPageProps) {
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        <Link href="/" className={styles.backBtn}>&larr; Back</Link>
+        <BackButton className={styles.backBtn} />
         
         <Card className={styles.detailCard}>
           {event.imageUrl && (

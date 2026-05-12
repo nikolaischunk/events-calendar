@@ -1,0 +1,16 @@
+.backBtn {
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.backBtn:hover {
+  color: var(--text-primary);
+}

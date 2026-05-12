@@ -56,9 +56,12 @@ export const CalendarView: React.FC<CalendarViewProps> = ({ events }) => {
           {days.map((day, idx) => {
             if (!day) return <div key={idx} className={styles.emptyDay} />;
             
-            // Find events for this day
-            const targetDateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toDateString();
-            const dayEvents = events.filter(e => new Date(e.date).toDateString() === targetDateStr);
+            // Find events for this day — compare ISO date prefix to avoid UTC→local shift
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const dayStr = String(day).padStart(2, '0');
+            const targetDateStr = `${year}-${month}-${dayStr}`;
+            const dayEvents = events.filter(e => e.date.startsWith(targetDateStr));
 
             return (
               <div key={idx} className={styles.dayCell}>
