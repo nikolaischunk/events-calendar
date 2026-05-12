@@ -11,14 +11,32 @@ import {
 // Minimal helper to generate unique IDs
 const generateId = () => crypto.randomBytes(16).toString("hex");
 
+const WEEKENDLY_BASE_URL = "https://weekendly.ch";
+const WEEKENDLY_ZURICH_CLUBS_URL = `${WEEKENDLY_BASE_URL}/clubs/zurich`;
+
+function buildFetchHeaders(url: string): Record<string, string> {
+  const headers: Record<string, string> = {
+    "User-Agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+  };
+
+  if (url.includes("weekendly.ch")) {
+    headers["Accept"] =
+      "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8";
+    headers["Accept-Language"] = "de-CH,de;q=0.9,en;q=0.8";
+    headers["Cache-Control"] = "no-cache";
+    headers["Pragma"] = "no-cache";
+    headers["Upgrade-Insecure-Requests"] = "1";
+  }
+
+  return headers;
+}
+
 // Generic Fetch and Parse Helper
 async function fetchAndParse(url: string) {
   try {
     const response = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (compatible; EventsCalendar nikolai@schunk.dev/1.0)",
-      },
+      headers: buildFetchHeaders(url),
     });
 
     if (!response.ok) {
@@ -50,9 +68,7 @@ async function fetchTextWithRetry(
     try {
       const response = await fetch(url, {
         signal: controller.signal,
-        headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; ZurichEventsBot/1.0)",
-        },
+        headers: buildFetchHeaders(url),
       });
       if (!response.ok) {
         throw new Error(
@@ -160,15 +176,37 @@ function parseDate(dateStr: string): string {
   if (!dateStr) return new Date().toISOString();
 
   try {
+    const normalized = safeTrim(dateStr);
+    const now = new Date();
+    const timeMatch = normalized.match(/(\d{1,2}):(\d{2})/);
+    const hours = timeMatch ? Number(timeMatch[1]) : 22;
+    const minutes = timeMatch ? Number(timeMatch[2]) : 0;
+
+    if (/heute/i.test(normalized)) {
+      const d = new Date(now);
+      d.setHours(hours, minutes, 0, 0);
+      return d.toISOString();
+    }
+
+    if (/morgen/i.test(normalized)) {
+      const d = new Date(now);
+      d.setDate(d.getDate() + 1);
+      d.setHours(hours, minutes, 0, 0);
+      return d.toISOString();
+    }
+
     // 1. Handle "DD.MM.YYYY" or "DD.MM.YY" (common in CH)
     const dotRegex = /(\d{1,2})\.(\d{1,2})\.(\d{2,4})/;
-    const dotMatch = dateStr.match(dotRegex);
+    const dotMatch = normalized.match(dotRegex);
     if (dotMatch) {
       const day = dotMatch[1].padStart(2, "0");
       const month = dotMatch[2].padStart(2, "0");
       let year = dotMatch[3];
       if (year.length === 2) year = `20${year}`;
-      return new Date(`${year}-${month}-${day}T22:00:00Z`).toISOString();
+      const isoDate = new Date(
+        Date.UTC(Number(year), Number(month) - 1, Number(day), hours, minutes),
+      );
+      return isoDate.toISOString();
     }
 
     // 2. Handle "DD APRIL" style (Supermarket)
@@ -206,20 +244,24 @@ function parseDate(dateStr: string): string {
       DEC: "12",
     };
 
-    const textMonthRegex = /(\d{1,2})\s([A-ZÄ]+)/i;
-    const textMonthMatch = dateStr.match(textMonthRegex);
+    const textMonthRegex =
+      /(?:mo|di|mi|do|fr|sa|so|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)?[.,\s]*(\d{1,2})\.?\s*([A-ZÄÖÜ]+)/i;
+    const textMonthMatch = normalized.match(textMonthRegex);
     if (textMonthMatch) {
       const day = textMonthMatch[1].padStart(2, "0");
       const monthName = textMonthMatch[2].toUpperCase();
       const month = monthMap[monthName];
       if (month) {
         const year = new Date().getFullYear();
-        return new Date(`${year}-${month}-${day}T22:00:00Z`).toISOString();
+        const isoDate = new Date(
+          Date.UTC(year, Number(month) - 1, Number(day), hours, minutes),
+        );
+        return isoDate.toISOString();
       }
     }
 
     // Fallback to standard JS Date
-    const d = new Date(dateStr);
+    const d = new Date(normalized);
     if (!isNaN(d.getTime())) return d.toISOString();
   } catch (e) {
     console.warn(`Failed to parse date: ${dateStr}`, e);
@@ -707,181 +749,210 @@ async function asyncPool<T, R>(
   return results;
 }
 
-// Scraper for Exil
-export async function scrapeExil(): Promise<CalendarEvent[]> {
-  const url = "https://exil.club";
-  const $ = await fetchAndParse(url);
+function normalizeForMatch(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
 
+function detectClubFromText(value: string): ClubName | null {
+  const normalized = normalizeForMatch(value);
+  if (!normalized) return null;
+  if (normalized.includes("exil")) return "Exil";
+  if (normalized.includes("maex") || normalized.includes("max")) return "Mäx";
+  if (normalized.includes("supermarket")) return "Supermarket";
+  if (normalized.includes("plaza")) return "Plaza";
+  if (normalized.includes("xtra")) return "X-Tra";
+  if (normalized.includes("bellevue")) return "Bellevue Club";
+  return null;
+}
+
+function fallbackWeekendlyHostPath(club: ClubName): string {
+  switch (club) {
+    case "Exil":
+      return "/host/exil-club";
+    case "Mäx":
+      return "/host/maex";
+    case "Supermarket":
+      return "/host/supermarket";
+    case "Plaza":
+      return "/host/plaza";
+    case "X-Tra":
+      return "/host/x-tra";
+    case "Bellevue Club":
+      return "/host/bellevue-club";
+    default:
+      return `/host/${normalizeForMatch(club)}`;
+  }
+}
+
+async function resolveWeekendlyHostPath(club: ClubName): Promise<string> {
+  const fallback = fallbackWeekendlyHostPath(club);
+  const $ = await fetchAndParse(WEEKENDLY_ZURICH_CLUBS_URL);
+  if (!$) return fallback;
+
+  let foundPath: string | null = null;
+  $('a[href^="/host/"]').each((_, el) => {
+    if (foundPath) return;
+    const href = safeTrim($(el).attr("href"));
+    if (!href) return;
+
+    const container = $(el).closest("article,li,div,section");
+    const text = safeTrim(`${$(el).text()} ${container.text()} ${href}`);
+    const matchedClub = detectClubFromText(text);
+    if (matchedClub === club) {
+      foundPath = href;
+      return;
+    }
+
+    if (detectClubFromText(href) === club) {
+      foundPath = href;
+    }
+  });
+
+  return foundPath || fallback;
+}
+
+function pickWeekendlyTitle(
+  $: cheerio.CheerioAPI,
+  container: cheerio.Cheerio<Element>,
+): string {
+  const heading = safeTrim(
+    container.find("h1,h2,h3,h4,[class*='title']").first().text(),
+  );
+  if (heading) return heading;
+
+  const textLines = container
+    .text()
+    .split(/\n+/g)
+    .map((line) => safeTrim(line))
+    .filter(Boolean)
+    .filter((line) => !/gewinne tickets?/i.test(line))
+    .filter((line) => !/(heute|morgen|mo\.|di\.|mi\.|do\.|fr\.|sa\.|so\.)/i.test(line))
+    .filter((line) => !/zürich|zurich/i.test(line))
+    .filter((line) => !/\b\d{1,2}:\d{2}\b/.test(line))
+    .filter((line) => line.length >= 3 && line.length <= 120);
+
+  return textLines[0] || "";
+}
+
+function pickWeekendlyDateText(containerText: string): string | undefined {
+  const normalized = safeTrim(containerText);
+  if (!normalized) return undefined;
+  const dateLike =
+    normalized.match(
+      /(heute|morgen)\s*(?:ab\s*)?\d{1,2}:\d{2}\s*uhr?/i,
+    )?.[0] ||
+    normalized.match(
+      /(mo|di|mi|do|fr|sa|so)\.?,?\s*\d{1,2}\.?\s*[a-zäöü]+(?:\s*ab\s*\d{1,2}:\d{2}\s*uhr?)?/i,
+    )?.[0] ||
+    normalized.match(
+      /\d{1,2}\.?\s*[a-zäöü]+(?:\s*\d{4})?(?:\s*ab\s*\d{1,2}:\d{2}\s*uhr?)?/i,
+    )?.[0];
+
+  return dateLike ? safeTrim(dateLike) : undefined;
+}
+
+function pickWeekendlyGenres(
+  $: cheerio.CheerioAPI,
+  container: cheerio.Cheerio<Element>,
+  club: ClubName,
+): string[] {
+  const candidates = uniqStrings(
+    container
+      .find("span,a,div,p,li")
+      .toArray()
+      .map((el) => safeTrim($(el).text()))
+      .filter((t) => t.length >= 2 && t.length <= 20),
+  ).filter((value) => {
+    const lower = value.toLowerCase();
+    if (lower.includes("ticket")) return false;
+    if (lower.includes("zürich") || lower.includes("zurich")) return false;
+    if (normalizeForMatch(value) === normalizeForMatch(club)) return false;
+    if (/\b\d+(?:\.\d+)?\s*chf\b/i.test(value)) return false;
+    return isPlausibleGenre(value);
+  });
+
+  return candidates.slice(0, 5);
+}
+
+async function scrapeWeekendlyClub(club: ClubName): Promise<CalendarEvent[]> {
+  const hostPath = await resolveWeekendlyHostPath(club);
+  const hostUrl = makeAbsolute(hostPath, WEEKENDLY_BASE_URL);
+  const $ = await fetchAndParse(hostUrl);
   if (!$) return [];
 
-  const listItems = $(".events-list-item.list-event");
+  const events: CalendarEvent[] = [];
+  const seen = new Set<string>();
 
-  const eventPromises = listItems
-    .map(async (_, element) => {
-      const title = $(element)
-        .find("> div > div:first-child")
-        .text()
-        .replace(/\s+/g, " ")
-        .trim();
-      const dateStr = $(element).find("> div > div:nth-child(2)").text().trim();
-      const relativeUrl = $(element).attr("href");
-      const eventUrl = relativeUrl
-        ? relativeUrl.startsWith("http")
-          ? relativeUrl
-          : `${url}${relativeUrl}`
-        : url;
+  $('a[href*="/event/"]').each((_, el) => {
+    const anchor = $(el);
+    const href = safeTrim(anchor.attr("href"));
+    if (!href) return;
+    const eventUrl = makeAbsolute(href, WEEKENDLY_BASE_URL);
+    if (seen.has(eventUrl)) return;
+    seen.add(eventUrl);
 
-      if (title) {
-        return {
-          id: generateId(),
-          club: "Exil" as ClubName,
-          title: title,
-          date: parseDate(dateStr),
-          eventUrl: eventUrl,
-          genres: [],
-        };
-      }
-      return null;
-    })
-    .get();
+    const container = anchor.closest("article,li,[class*='card'],div");
+    const imageUrl = extractImageUrlFromContainer(
+      $,
+      container as cheerio.Cheerio<Element>,
+      WEEKENDLY_BASE_URL,
+    );
+    const title = pickWeekendlyTitle($, container as cheerio.Cheerio<Element>);
+    if (!title) return;
 
-  const results = await Promise.all(eventPromises);
-  const filteredEvents = results.filter((e): e is NonNullable<typeof e> => e !== null);
+    const containerText = safeTrim(container.text());
+    const dateText = pickWeekendlyDateText(containerText) || "";
+    const genres = pickWeekendlyGenres($, container as cheerio.Cheerio<Element>, club);
+    const location = /zürich|zurich/i.test(containerText) ? "Zürich" : undefined;
 
-  console.log(`Exil: Scraped ${filteredEvents.length} events`);
-  return filteredEvents;
+    events.push({
+      id: generateId(),
+      club,
+      title,
+      date: parseDate(dateText),
+      eventUrl,
+      imageUrl,
+      genres,
+      location,
+    });
+  });
+
+  console.log(`${club}: Scraped ${events.length} events from Weekendly`);
+  return events;
+}
+
+// Scraper for Exil
+export async function scrapeExil(): Promise<CalendarEvent[]> {
+  return scrapeWeekendlyClub("Exil");
 }
 
 // Scraper for Mäx
 export async function scrapeMaex(): Promise<CalendarEvent[]> {
-  const url = "https://maexzuerich.com";
-  const $ = await fetchAndParse(`${url}/events`);
-  const events: CalendarEvent[] = [];
-
-  if (!$) return [];
-
-  // Mäx renders each event across multiple grid children (some without the image).
-  // Aggregate by event URL and then pick the best title/date/image nodes.
-  const eventUrlSet = new Set<string>();
-  $('a[href^="/events/"]').each((_, el) => {
-    const href = $(el).attr("href");
-    if (!href) return;
-    eventUrlSet.add(makeAbsolute(href, url));
-  });
-
-  for (const eventUrl of eventUrlSet) {
-    const relative = eventUrl.replace(url, "");
-    const anchors = $(`a[href="${relative}"], a[href="${eventUrl}"]`);
-
-    const titleAnchor = anchors
-      .filter((_, el) => {
-        const a = $(el);
-        const text = a
-          .text()
-          .replace(/More info/g, "")
-          .trim();
-        if (!text) return false;
-        if (a.find("img").length > 0) return false;
-        return true;
-      })
-      .first();
-
-    const title = titleAnchor
-      .text()
-      .replace(/More info/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
-    if (!title) continue;
-
-    const container =
-      titleAnchor.closest("div.grid > div").length > 0
-        ? titleAnchor.closest("div.grid > div")
-        : titleAnchor.closest("div");
-
-    const dateStr = container.find(".font-bold").first().text().trim();
-
-    const imageAnchor = anchors.has("img").first();
-    const imageUrl = imageAnchor.length
-      ? extractImageUrlFromContainer($, imageAnchor as cheerio.Cheerio<Element>, url)
-      : extractImageUrlFromContainer($, container as cheerio.Cheerio<Element>, url);
-
-    events.push({
-      id: generateId(),
-      club: "Mäx",
-      title,
-      date: parseDate(dateStr),
-      eventUrl,
-      imageUrl,
-      genres: [],
-    });
-  }
-
-  console.log(`Mäx: Scraped ${events.length} events`);
-  return events;
+  return scrapeWeekendlyClub("Mäx");
 }
 
 // Scraper for Supermarket
 export async function scrapeSupermarket(): Promise<CalendarEvent[]> {
-  const url = "https://supermarket.li";
-  const $ = await fetchAndParse(`${url}/events/`);
-  const events: CalendarEvent[] = [];
+  return scrapeWeekendlyClub("Supermarket");
+}
 
-  if (!$) return [];
+// Scraper for Plaza
+export async function scrapePlaza(): Promise<CalendarEvent[]> {
+  return scrapeWeekendlyClub("Plaza");
+}
 
-  // Supermarket uses Elementor; the featured image and title often live in separate blocks.
-  // We aggregate by event URL and then pick title/date/image from the best matching nodes.
-  const eventUrlSet = new Set<string>();
-  $('a[href*="/events/"]').each((_, el) => {
-    const href = $(el).attr("href");
-    if (!href) return;
-    const absolute = makeAbsolute(href, url);
-    // Skip the index page itself.
-    if (absolute.replace(/\/+$/, "") === `${url}/events`) return;
-    eventUrlSet.add(absolute);
-  });
+// Scraper for X-Tra
+export async function scrapeXTra(): Promise<CalendarEvent[]> {
+  return scrapeWeekendlyClub("X-Tra");
+}
 
-  for (const eventUrl of eventUrlSet) {
-    const anchors = $(`a[href="${eventUrl}"]`);
-    const titleAnchor = anchors
-      .filter((_, el) => {
-        const a = $(el);
-        const text = a.text().trim();
-        if (!text) return false;
-        if (text.toLowerCase() === "tickets") return false;
-        if (a.find("img").length > 0) return false;
-        return true;
-      })
-      .first();
-    const title = titleAnchor.text().replace(/\s+/g, " ").trim();
-    if (!title) continue;
-
-    const dateContainer =
-      titleAnchor.closest(".e-con").length > 0
-        ? titleAnchor.closest(".e-con")
-        : titleAnchor.closest(".elementor-element");
-    const dateStr =
-      dateContainer
-        .text()
-        .match(/(MO|DI|MI|DO|FR|SA|SO)\s\d{1,2}\s[A-ZÄ]+/i)?.[0] || "";
-
-    const imageAnchor = anchors.has("img").first();
-    const imageUrl = imageAnchor.length
-      ? extractImageUrlFromContainer($, imageAnchor as cheerio.Cheerio<Element>, url)
-      : undefined;
-
-    events.push({
-      id: generateId(),
-      club: "Supermarket",
-      title,
-      date: parseDate(dateStr),
-      eventUrl,
-      imageUrl,
-      genres: [],
-    });
-  }
-
-  console.log(`Supermarket: Scraped ${events.length} events`);
-  return events;
+// Scraper for Bellevue Club
+export async function scrapeBellevueClub(): Promise<CalendarEvent[]> {
+  return scrapeWeekendlyClub("Bellevue Club");
 }
 
 /**
@@ -892,6 +963,9 @@ export async function runAllScrapers(): Promise<CalendarEvent[]> {
     { name: "Exil", fn: scrapeExil },
     { name: "Mäx", fn: scrapeMaex },
     { name: "Supermarket", fn: scrapeSupermarket },
+    { name: "Plaza", fn: scrapePlaza },
+    { name: "X-Tra", fn: scrapeXTra },
+    { name: "Bellevue Club", fn: scrapeBellevueClub },
   ];
 
   const results = await Promise.all(
@@ -906,6 +980,12 @@ export async function runAllScrapers(): Promise<CalendarEvent[]> {
   );
 
   const discovered = results.flat();
+
+  const skipWeekendlyDetail =
+    process.env.SCRAPE_WEEKENDLY_SKIP_DETAIL !== "false";
+  if (skipWeekendlyDetail) {
+    return discovered;
+  }
 
   const concurrency = Number(process.env.SCRAPE_DETAIL_CONCURRENCY || 8);
   const inRunCache = new Map<string, Promise<CalendarEvent>>();
