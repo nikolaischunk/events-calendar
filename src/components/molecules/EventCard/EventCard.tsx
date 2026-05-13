@@ -13,7 +13,13 @@ interface EventCardProps {
 
 export const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const clubColor = getClubColorVariable(event.club);
-  const displayTime = event.startTime;
+  const eventDate = new Date(event.date);
+  const displayTime =
+    event.startTime ??
+    eventDate.toLocaleTimeString("de-CH", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   return (
     <Link href={`/event/${event.id}`}>

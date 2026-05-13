@@ -1007,7 +1007,12 @@ export async function runAllScrapers(): Promise<CalendarEvent[]> {
     }),
   );
 
-  const discovered = results.flat();
+  // Drop events that ended before today (covers cancelled/stale entries with old dates)
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const discovered = results.flat().filter(
+    (e) => new Date(e.date) >= startOfToday,
+  );
 
   const concurrency = Number(process.env.SCRAPE_DETAIL_CONCURRENCY || 8);
   const inRunCache = new Map<string, Promise<CalendarEvent>>();
