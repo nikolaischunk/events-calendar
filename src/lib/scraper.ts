@@ -561,6 +561,11 @@ function parseDetailByClub(
     };
   }
 
+  if (club === "Plaza") {
+    // All data is already on the list page; return empty so enrichment doesn't overwrite.
+    return {};
+  }
+
   if (club === "Supermarket") {
     const content = $(
       ".elementor-widget-theme-post-content, .elementor-widget-container, article",
@@ -884,6 +889,102 @@ export async function scrapeSupermarket(): Promise<CalendarEvent[]> {
   return events;
 }
 
+function parsePlazaGenres(subtitle: string): string[] {
+  if (!subtitle) return [];
+  const wordCount = subtitle.trim().split(/\s+/).length;
+  const hasCommas = subtitle.includes(",");
+  // Long subtitle without commas is a description sentence, not genre tags
+  if (!hasCommas && wordCount > 6) return [];
+  const primaryTokens = hasCommas ? subtitle.split(",") : subtitle.split(/\s+/);
+  const tokens = primaryTokens.flatMap((t) =>
+    // Split on " & " (spaced ampersand) but keep "R&B"-style intact
+    t.split(/ & /).map((s) =>
+      s
+        .replace(/[!.,?;:]+$/, "")
+        .replace(/^[!.,?;:]+/, "")
+        .trim(),
+    ),
+  );
+  return uniqStrings(tokens.filter(isPlausibleGenre));
+}
+
+// Scraper for Plaza
+export async function scrapePlaza(): Promise<CalendarEvent[]> {
+  const baseUrl = "https://www.plaza-zurich.ch";
+  const baseListUrl = `${baseUrl}/nu/events/event_list/`;
+  const events: CalendarEvent[] = [];
+  const seenIds = new Set<string>();
+  const maxPages = 12;
+
+  function parseEventsFromPage($: cheerio.CheerioAPI): void {
+    $("li.nu-event").each((_, el) => {
+      const item = $(el);
+
+      const eventId = item.attr("data-nu-eid");
+      if (eventId && seenIds.has(eventId)) return;
+      if (eventId) seenIds.add(eventId);
+
+      const title = safeTrim(item.attr("data-nu-etitle"));
+      if (!title) return;
+
+      const dateStr = item.attr("data-nu-edate") || "";
+      const date = dateStr
+        ? new Date(dateStr.replace(" ", "T") + "Z").toISOString()
+        : new Date().toISOString();
+
+      const genreText = safeTrim(
+        item.find(".nu-e-titleblock h2 span").first().text(),
+      );
+      const genres = parsePlazaGenres(genreText);
+
+      const imgSrc = item.find(".nu-e-flyer img").attr("data-imgsrc");
+      const imageUrl = imgSrc ? makeAbsolute(imgSrc, baseUrl) : undefined;
+
+      const ticketHref = item.find("a.nu-e-link-ticket").attr("href");
+      const ticketUrl = ticketHref
+        ? makeAbsolute(ticketHref, baseUrl)
+        : undefined;
+
+      const description =
+        safeTrim(item.find(".nu-e-shortdescription").text()) || undefined;
+
+      const eventUrl = eventId
+        ? `${baseUrl}/nu/events/event_details/${eventId}`
+        : undefined;
+
+      events.push({
+        id: generateId(),
+        club: "Plaza",
+        title,
+        date,
+        genres,
+        imageUrl,
+        ticketUrl,
+        description,
+        eventUrl,
+      });
+    });
+  }
+
+  // Page 0: base URL (no ?page param)
+  const $first = await fetchAndParse(baseListUrl);
+  if (!$first) return [];
+  parseEventsFromPage($first);
+
+  // Follow pagination until no next link or max pages reached
+  let pageNum = 1;
+  while (pageNum <= maxPages) {
+    const $page = await fetchAndParse(`${baseListUrl}?page=${pageNum}`);
+    if (!$page) break;
+    parseEventsFromPage($page);
+    if ($page(".pagination__next").length === 0) break;
+    pageNum++;
+  }
+
+  console.log(`Plaza: Scraped ${events.length} events across ${pageNum} pages`);
+  return events;
+}
+
 /**
  * Main scraper runner that aggregates all clubs
  */
@@ -892,6 +993,7 @@ export async function runAllScrapers(): Promise<CalendarEvent[]> {
     { name: "Exil", fn: scrapeExil },
     { name: "Mäx", fn: scrapeMaex },
     { name: "Supermarket", fn: scrapeSupermarket },
+    { name: "Plaza", fn: scrapePlaza },
   ];
 
   const results = await Promise.all(

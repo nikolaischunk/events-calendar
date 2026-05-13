@@ -59,7 +59,7 @@ export default async function EventDetail({ params }: EventPageProps) {
                 src={event.imageUrl} 
                 alt={event.title} 
                 fill
-                sizes="100vw"
+                sizes="(max-width: 800px) calc(100vw - 2rem), 800px"
                 priority
                 className={styles.heroImage}
               />
