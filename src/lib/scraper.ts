@@ -495,6 +495,13 @@ function normalizeUrlKey(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
+const nonEventLinkLabelRegex = /^(tickets?|details?)$/i;
+
+/**
+ * Extracts the first date-like substring from arbitrary event card text.
+ * Supports numeric Swiss-style dates (e.g. "14.06.2026"), weekday + day + month
+ * snippets (e.g. "FR 14 JUNI"), and generic day + month forms.
+ */
 function findDateLikeText(text: string): string {
   if (!text) return "";
   const normalized = safeTrim(text);
@@ -1028,7 +1035,13 @@ export async function scrapeClub04(): Promise<CalendarEvent[]> {
   const eventsPageUrl = `${baseUrl}/events`;
   const events: CalendarEvent[] = [];
 
-  const $ = (await fetchAndParse(eventsPageUrl)) || (await fetchAndParse(baseUrl));
+  const primaryPage = await fetchAndParse(eventsPageUrl);
+  if (!primaryPage) {
+    console.info(
+      `Club04: Failed to load ${eventsPageUrl}, falling back to ${baseUrl}`,
+    );
+  }
+  const $ = primaryPage || (await fetchAndParse(baseUrl));
   if (!$) return [];
 
   const eventUrlSet = new Set<string>();
@@ -1061,24 +1074,35 @@ export async function scrapeClub04(): Promise<CalendarEvent[]> {
     });
     if (matchingAnchors.length === 0) continue;
 
-    const container =
-      matchingAnchors.first().closest("article, li, .event, .card, div").first() ||
-      matchingAnchors.first();
+    const specificContainer = matchingAnchors
+      .first()
+      .closest("article, li, .event, .card, [class*='event'], [class*='card']")
+      .first();
+    const container = specificContainer.length
+      ? specificContainer
+      : matchingAnchors.first().parent();
     const containerText = safeTrim(container.text());
 
-    const titleCandidates = uniqStrings([
+    const anchorTitleCandidates = uniqStrings([
       ...matchingAnchors
         .toArray()
         .map((el) => safeTrim($(el).text()))
         .filter(Boolean),
-      ...container
+    ]).filter((text) => !nonEventLinkLabelRegex.test(text));
+    const headingTitleCandidates = uniqStrings(
+      container
         .find("h1, h2, h3, h4, [class*='title'], [class*='Title']")
         .toArray()
         .map((el) => safeTrim($(el).text()))
         .filter(Boolean),
-    ]).filter((text) => !/^(tickets?|details?)$/i.test(text));
+    ).filter((text) => !nonEventLinkLabelRegex.test(text));
 
-    const title = titleCandidates.sort((a, b) => b.length - a.length)[0];
+    // Prefer headings first, then fall back to link labels if necessary.
+    const titlePool =
+      headingTitleCandidates.length > 0
+        ? headingTitleCandidates
+        : anchorTitleCandidates;
+    const title = titlePool.sort((a, b) => b.length - a.length)[0];
     if (!title) continue;
 
     const dateStr = findDateLikeText(containerText);
