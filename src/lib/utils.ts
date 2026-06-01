@@ -10,6 +10,8 @@ export function getClubColorVariable(club: ClubName | string): string {
       return "var(--club-supermarket)";
     case "Plaza":
       return "var(--club-plaza)";
+    case "Club04":
+      return "var(--club-club04)";
     case "X-Tra":
       return "var(--club-xtra)";
     case "Bellevue Club":

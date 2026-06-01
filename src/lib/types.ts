@@ -1,4 +1,11 @@
-export type ClubName = "Mäx" | "Exil" | "Supermarket" | "Plaza" | "X-Tra" | "Bellevue Club";
+export type ClubName =
+  | "Mäx"
+  | "Exil"
+  | "Supermarket"
+  | "Plaza"
+  | "Club04"
+  | "X-Tra"
+  | "Bellevue Club";
 
 export interface CalendarEvent {
   id: string;
