@@ -18,7 +18,7 @@ export function HomeClient({ events, view }: HomeClientProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const router = useRouter();
   
-  const availableClubs: ClubName[] = ["Mäx", "Exil", "Supermarket", "Plaza", "X-Tra", "Bellevue Club"];
+  const availableClubs: ClubName[] = ["Mäx", "Exil", "Supermarket", "Plaza", "Club04", "X-Tra", "Bellevue Club"];
 
   const toggleClub = (club: string) => {
     setSelectedClubs(prev => 

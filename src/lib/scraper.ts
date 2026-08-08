@@ -491,6 +491,32 @@ function parseArtistsFromText(text: string | undefined): string[] {
   );
 }
 
+function normalizeUrlKey(url: string): string {
+  return url.replace(/\/+$/, "");
+}
+
+const nonEventLinkLabelRegex = /^(tickets?|details?)$/i;
+
+/**
+ * Extracts the first date-like substring from arbitrary event card text.
+ * Supports numeric Swiss-style dates (e.g. "14.06.2026"), weekday + day + month
+ * snippets (e.g. "FR 14 JUNI"), and generic day + month forms.
+ */
+function findDateLikeText(text: string): string {
+  if (!text) return "";
+  const normalized = safeTrim(text);
+  return (
+    normalized.match(
+      /(\d{1,2}\.\d{1,2}\.\d{2,4}(?:\s+\d{1,2}:\d{2})?)/,
+    )?.[1] ||
+    normalized.match(
+      /((?:MO|DI|MI|DO|FR|SA|SO|MON|TUE|WED|THU|FRI|SAT|SUN)\w*\s+\d{1,2}\s+[A-ZÄ]+)/i,
+    )?.[1] ||
+    normalized.match(/(\d{1,2}\s+[A-ZÄ]{3,})/i)?.[1] ||
+    ""
+  );
+}
+
 function parseDetailByClub(
   club: ClubName,
   $: cheerio.CheerioAPI,
@@ -587,6 +613,24 @@ function parseDetailByClub(
       description,
       artists: artists.length > 0 ? artists : undefined,
       ticketUrl: ticketUrl ? makeAbsolute(ticketUrl, eventUrl) : undefined,
+    };
+  }
+
+  if (club === "Club04") {
+    const mainContent = $(
+      "main, article, [class*='event'], [class*='Event'], .content, .container",
+    )
+      .first()
+      .text();
+    const description = safeTrim(mainContent) || undefined;
+    const artists = parseArtistsFromText(
+      extractSectionTextAfterHeading($, /line\s*up|artists?|djs?/i),
+    );
+    const ticketUrl = extractTicketUrlFromDom($, eventUrl);
+    return {
+      description,
+      artists: artists.length > 0 ? artists : undefined,
+      ticketUrl,
     };
   }
 
@@ -985,6 +1029,98 @@ export async function scrapePlaza(): Promise<CalendarEvent[]> {
   return events;
 }
 
+// Scraper for Club04
+export async function scrapeClub04(): Promise<CalendarEvent[]> {
+  const baseUrl = "https://tickets.club04.ch";
+  const eventsPageUrl = `${baseUrl}/events`;
+  const events: CalendarEvent[] = [];
+
+  const primaryPage = await fetchAndParse(eventsPageUrl);
+  if (!primaryPage) {
+    console.info(
+      `Club04: Failed to load ${eventsPageUrl}, falling back to ${baseUrl}`,
+    );
+  }
+  const $ = primaryPage || (await fetchAndParse(baseUrl));
+  if (!$) return [];
+
+  const eventUrlSet = new Set<string>();
+  $("a[href]").each((_, el) => {
+    const href = $(el).attr("href");
+    if (!href) return;
+    const absolute = makeAbsolute(href, baseUrl);
+
+    let parsed: URL;
+    try {
+      parsed = new URL(absolute);
+    } catch {
+      return;
+    }
+
+    if (parsed.host !== "tickets.club04.ch") return;
+    const path = parsed.pathname.toLowerCase().replace(/\/+$/, "");
+    if (!path || path === "/") return;
+    if (path === "/events") return;
+    if (!path.includes("/event")) return;
+
+    eventUrlSet.add(normalizeUrlKey(absolute));
+  });
+
+  for (const eventUrl of eventUrlSet) {
+    const matchingAnchors = $("a[href]").filter((_, el) => {
+      const href = $(el).attr("href");
+      if (!href) return false;
+      return normalizeUrlKey(makeAbsolute(href, baseUrl)) === eventUrl;
+    });
+    if (matchingAnchors.length === 0) continue;
+
+    const specificContainer = matchingAnchors
+      .first()
+      .closest("article, li, .event, .card, [class*='event'], [class*='card']")
+      .first();
+    const container = specificContainer.length
+      ? specificContainer
+      : matchingAnchors.first().parent();
+    const containerText = safeTrim(container.text());
+
+    const anchorTitleCandidates = uniqStrings([
+      ...matchingAnchors
+        .toArray()
+        .map((el) => safeTrim($(el).text()))
+        .filter(Boolean),
+    ]).filter((text) => !nonEventLinkLabelRegex.test(text));
+    const headingTitleCandidates = uniqStrings(
+      container
+        .find("h1, h2, h3, h4, [class*='title'], [class*='Title']")
+        .toArray()
+        .map((el) => safeTrim($(el).text()))
+        .filter(Boolean),
+    ).filter((text) => !nonEventLinkLabelRegex.test(text));
+
+    // Prefer headings first, then fall back to link labels if necessary.
+    const titlePool =
+      headingTitleCandidates.length > 0
+        ? headingTitleCandidates
+        : anchorTitleCandidates;
+    const title = titlePool.sort((a, b) => b.length - a.length)[0];
+    if (!title) continue;
+
+    const dateStr = findDateLikeText(containerText);
+
+    events.push({
+      id: generateId(),
+      club: "Club04",
+      title,
+      date: parseDate(dateStr),
+      eventUrl,
+      genres: [],
+    });
+  }
+
+  console.log(`Club04: Scraped ${events.length} events`);
+  return events;
+}
+
 /**
  * Main scraper runner that aggregates all clubs
  */
@@ -994,6 +1130,7 @@ export async function runAllScrapers(): Promise<CalendarEvent[]> {
     { name: "Mäx", fn: scrapeMaex },
     { name: "Supermarket", fn: scrapeSupermarket },
     { name: "Plaza", fn: scrapePlaza },
+    { name: "Club04", fn: scrapeClub04 },
   ];
 
   const results = await Promise.all(
